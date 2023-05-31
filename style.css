@@ -220,6 +220,7 @@ main {
 .gameboard div {
 	width: 10rem;
 	height: 10rem;
+	font-size: 90px;
 
 	display: grid;
 	justify-content: center;
