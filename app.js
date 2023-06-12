@@ -1,35 +1,47 @@
-const makePlayer = (name, marker) => {
-	return { name, marker };
+// todo 1. function that make the board
+// todo 2. function that show player turn
+// todo 3. function that make player
+// todo 4.
+
+const makePlayer = function (name, mark) {
+	this.name = name;
+	this.mark = mark;
 };
 
-const game = (() => {
-	// player
-	const player1 = makePlayer('player1', 'X');
-	const player2 = makePlayer('player2', 'O');
-
-	let correctPlayer = player1;
-
-	let board = [];
-
-	const gameboard = document.querySelectorAll('.gameboard div');
-	gameboard.forEach((e) => {
-		if (e.innerText == '') {
-			e.addEventListener('click', () => {
-				e.innerText = correctPlayer.marker;
-				if (correctPlayer == player1) {
-					correctPlayer = player2;
-				} else {
-					correctPlayer = player1;
-				}
-				board.push(e.innerText);
-				console.log(e);
-			});
-		} else {
-			console.log('no');
-		}
-	});
-	// clean the board
-	function cleanBoard() {
-		gameboard.forEach((e) => (e.innerText = ''));
+const makeBoard = (() => {
+	const main = document.querySelector('.gameboard');
+	for (let i = 0; i < 9; i++) {
+		const div = document.createElement('div');
+		div.setAttribute('data-number', i + 1);
+		main.appendChild(div);
 	}
+})();
+
+const renderBoard = (() => {
+	let gameboard = ['', '', '', '', '', '', '', '', ''];
+	const square = document.querySelectorAll('.gameboard div');
+	for (let i = 0; i < 9; i++) {
+		square[i].innerText = gameboard[i];
+	}
+	return { square };
+})();
+
+const displayController = (() => {
+	let round = 0;
+	let currentPlayer;
+	const playerOne = new makePlayer('playerOne', 'X');
+	const playerTwo = new makePlayer('playerTwo', 'O');
+	renderBoard.square.forEach((square) => {
+		square.addEventListener('click', () => {
+			if (currentPlayer == playerOne) {
+				currentPlayer = playerTwo;
+			} else {
+				currentPlayer = playerOne;
+			}
+			square.innerText = currentPlayer.mark;
+			round++;
+			console.log(round);
+		});
+	});
+	return { currentPlayer };
 })();
