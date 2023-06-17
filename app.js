@@ -54,6 +54,8 @@ const endGame = (() => {
 	function finishGame() {
 		if (renderBoard.gameboard.indexOf('') == -1) {
 			console.log('end game');
+			renderBoard.gameboard = ['', '', '', '', '', '', '', '', ''];
+			renderBoard.fillBoard();
 		}
 	}
 	return { finishGame };
