@@ -12,7 +12,7 @@ const makeBoard = (() => {
 	const main = document.querySelector('.gameboard');
 	for (let i = 0; i < 9; i++) {
 		const div = document.createElement('div');
-		div.setAttribute('data-number', i + 1);
+		div.setAttribute('data-number', i);
 		main.appendChild(div);
 	}
 })();
@@ -20,14 +20,16 @@ const makeBoard = (() => {
 const renderBoard = (() => {
 	let gameboard = ['', '', '', '', '', '', '', '', ''];
 	const square = document.querySelectorAll('.gameboard div');
-	for (let i = 0; i < 9; i++) {
-		square[i].innerText = gameboard[i];
+	function fillBoard() {
+		for (let i = 0; i < 9; i++) {
+			square[i].innerText = gameboard[i];
+		}
 	}
-	return { square };
+	return { square, gameboard, fillBoard };
 })();
 
-const displayController = (() => {
-	let round = 0;
+const PlayerOption = (() => {
+	let round = +document.querySelector('#round-number').value;
 	let currentPlayer;
 	const playerOne = new makePlayer('playerOne', 'X');
 	const playerTwo = new makePlayer('playerTwo', 'O');
@@ -38,10 +40,21 @@ const displayController = (() => {
 			} else {
 				currentPlayer = playerOne;
 			}
-			square.innerText = currentPlayer.mark;
-			round++;
-			console.log(round);
+			let indexOfGamenoard = square.getAttribute('data-number');
+			renderBoard.gameboard[indexOfGamenoard] = currentPlayer.mark;
+			renderBoard.fillBoard();
+			endGame.finishGame();
+			console.log(renderBoard.gameboard, round);
 		});
 	});
-	return { currentPlayer };
+	return { currentPlayer, round };
+})();
+
+const endGame = (() => {
+	function finishGame() {
+		if (renderBoard.gameboard.indexOf('') == -1) {
+			console.log('end game');
+		}
+	}
+	return { finishGame };
 })();
