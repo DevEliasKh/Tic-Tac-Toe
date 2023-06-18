@@ -1,8 +1,13 @@
+let square = [];
+let currentPlayer;
+let winnerStatus = false;
+let gameboard = ['', '', '', '', '', '', '', '', ''];
+
 const makePlayer = function (name, mark) {
 	this.name = name;
 	this.mark = mark;
 };
-let square = [];
+
 function makeBoard() {
 	const main = document.querySelector('.gameboard');
 	for (let i = 0; i < 9; i++) {
@@ -14,45 +19,25 @@ function makeBoard() {
 	return square;
 }
 
-let gameboard = ['', '', '', '', '', '', '', '', ''];
-
 function fillBoard() {
 	for (let i = 0; i < 9; i++) {
 		square[i].innerText = gameboard[i];
 	}
 }
 
-export function PlayerOption() {
-	let currentPlayer;
-	const info = document.querySelector('#info');
-	const playerOne = new makePlayer('playerOne', 'X');
-	const playerTwo = new makePlayer('playerTwo', 'O');
+function resetGame() {
+	console.log('end game');
 	square.forEach((square) => {
-		square.addEventListener('click', () => {
-			if (currentPlayer == playerOne) {
-				currentPlayer = playerTwo;
-			} else {
-				currentPlayer = playerOne;
-			}
-			info.innerText = `${currentPlayer.name} just played, it's your turn now!`;
-			let indexOfGamenoard = square.getAttribute('data-number');
-			gameboard[indexOfGamenoard] = currentPlayer.mark;
-			fillBoard();
-			findWinner();
-			finishGame();
-		});
+		square.innerText = '';
 	});
+	gameboard = ['', '', '', '', '', '', '', '', ''];
+	info.innerText = `Start with clicking on any square you want`;
 }
 
-function finishGame() {
-	if (gameboard.indexOf('') == -1) {
-		findWinner();
-		console.log('end game');
-		square.forEach((square) => {
-			square.innerText = '';
-		});
-		gameboard = ['', '', '', '', '', '', '', '', ''];
-		info.innerText = `Start with clicking on any square you want`;
+function endGame() {
+	if (gameboard.indexOf('') == -1 && winnerStatus == false) {
+		alert('DRAW!!!');
+		resetGame();
 	}
 }
 
@@ -71,15 +56,35 @@ function findWinner() {
 		if (
 			gameboard[condition[0]] != '' &&
 			gameboard[condition[1]] != '' &&
-			gameboard[condition[2]] != ''
+			gameboard[condition[2]] != '' &&
+			gameboard[condition[0]] == gameboard[condition[1]] &&
+			gameboard[condition[1]] == gameboard[condition[2]]
 		) {
-			if (
-				gameboard[condition[0]] == gameboard[condition[1]] &&
-				gameboard[condition[1]] == gameboard[condition[2]]
-			) {
-				alert('we have a winner');
-			}
+			winnerStatus = true;
+			alert(`${currentPlayer.name} wins!`);
+			resetGame();
 		}
+	});
+}
+
+export function PlayerOption() {
+	const info = document.querySelector('#info');
+	const playerOne = new makePlayer('player X', 'X');
+	const playerTwo = new makePlayer('player O', 'O');
+	square.forEach((square) => {
+		square.addEventListener('click', () => {
+			if (currentPlayer == playerOne) {
+				currentPlayer = playerTwo;
+			} else {
+				currentPlayer = playerOne;
+			}
+			info.innerText = `${currentPlayer.name} just played, it's your turn now!`;
+			let indexOfGamenoard = square.getAttribute('data-number');
+			gameboard[indexOfGamenoard] = currentPlayer.mark;
+			fillBoard();
+			endGame();
+			findWinner();
+		});
 	});
 }
 
